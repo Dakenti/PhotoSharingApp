@@ -1,0 +1,6 @@
+framework module Pods_PhotoSharingAppFirebase {
+  umbrella header "Pods-PhotoSharingAppFirebase-umbrella.h"
+
+  export *
+  module * { export * }
+}
