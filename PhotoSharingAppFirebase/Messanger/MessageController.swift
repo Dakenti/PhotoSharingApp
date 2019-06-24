@@ -24,7 +24,7 @@ class MessageController: UITableViewController {
         
 //        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-        tabBarController?.tabBar.isHidden = true
+        tabBarController?.tabBar.isHidden = false
         
         let image = UIImage(named: "new_message_icon")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessages))
@@ -36,6 +36,11 @@ class MessageController: UITableViewController {
         
         //        observeUserMessages()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     func observeUserMessages(){
@@ -224,6 +229,5 @@ class MessageController: UITableViewController {
         loginViewController.messageController = self
         present(loginViewController, animated: true, completion: nil)
     }
-    
 }
 

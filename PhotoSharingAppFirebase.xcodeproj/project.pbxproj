@@ -127,10 +127,10 @@
 			children = (
 				255F503222BF6398008CCE43 /* MessageController.swift */,
 				255F504C22BF6590008CCE43 /* NewMessageController.swift */,
-				255F504722BF652B008CCE43 /* ChatMessageCell.swift */,
-				255F504622BF652B008CCE43 /* MessageCell.swift */,
 				255F504A22BF6590008CCE43 /* ChatController.swift */,
 				255F504B22BF6590008CCE43 /* LoginViewController.swift */,
+				255F504722BF652B008CCE43 /* ChatMessageCell.swift */,
+				255F504622BF652B008CCE43 /* MessageCell.swift */,
 			);
 			path = Messanger;
 			sourceTree = "<group>";

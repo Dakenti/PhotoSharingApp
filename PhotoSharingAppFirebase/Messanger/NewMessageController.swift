@@ -20,6 +20,8 @@ class NewMessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tabBarController?.tabBar.isHidden = true
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancelButton))
         
         tableView.register(MessageCell.self, forCellReuseIdentifier: cellId)

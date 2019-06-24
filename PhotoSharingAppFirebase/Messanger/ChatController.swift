@@ -42,6 +42,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         super.viewDidLoad()
         
 //        navigationItem.title = "Chat Log Controller"
+        tabBarController?.tabBar.isHidden = true
         
         collectionView.alwaysBounceVertical = true
         collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
