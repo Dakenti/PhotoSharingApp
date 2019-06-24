@@ -73,7 +73,7 @@ class HomePostCell: UICollectionViewCell {
     lazy var sendMessageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleSendbuttonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sendMessageButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -167,7 +167,7 @@ extension HomePostCell {
         delegate?.didLike(for: self)
     }
     
-    @objc func handleSendbuttonPressed() {
+    @objc func sendMessageButtonPressed() {
         guard let post = post else { return }
         delegate?.sendMessageButtonPressed(to: post.user.uid)
     }

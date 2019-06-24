@@ -132,6 +132,12 @@ extension HomeController: HomePostCellDelegate {
         print(toUser)
     }
     
+    func sendMessagebuttonPressed(to toUser: String) {
+        print(toUser)
+        let newMessageController = NewMessageController(style: .plain)
+        present(newMessageController, animated: true, completion: nil)
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }

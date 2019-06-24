@@ -56,9 +56,10 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         //plus
         let plusNavController = templateNavController(unselectedImage: "plus_unselected", selectedImage: "plus_selected")
         //like
-        let likeNavSelected = templateNavController(unselectedImage: "send2", selectedImage: "send2_selected")
+        let messageController = MessageController(style: .plain)
+        let messangerNavSelected = templateNavController(unselectedImage: "send2", selectedImage: "send2_selected", rootViewController: messageController)
         
-        viewControllers = [homeNavController,searchNavController,plusNavController,likeNavSelected,profileNavController]
+        viewControllers = [homeNavController,searchNavController,plusNavController,messangerNavSelected,profileNavController]
         
         guard let items = tabBar.items else { return }
         for item in items {

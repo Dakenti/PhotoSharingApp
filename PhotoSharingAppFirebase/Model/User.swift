@@ -9,14 +9,15 @@
 import Foundation
 
 struct User {
-    
+    let email: String?
     let username: String?
     let profileImageUrl: String?
-    let uid: String
+    var uid: String
     
     init(uid: String, dictionary: [String : Any]) {
         self.username = dictionary["username"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
+        self.email = dictionary["email"] as? String ?? "" 
         self.uid = uid
     }
     
