@@ -128,6 +128,9 @@ extension HomeController {
 // MARK: Collection view set up
 
 extension HomeController: HomePostCellDelegate {
+    func sendMessageButtonPressed(to toUser: String) {
+        print(toUser)
+    }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count

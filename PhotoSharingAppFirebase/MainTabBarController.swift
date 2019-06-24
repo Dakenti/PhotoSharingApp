@@ -56,7 +56,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         //plus
         let plusNavController = templateNavController(unselectedImage: "plus_unselected", selectedImage: "plus_selected")
         //like
-        let likeNavSelected = templateNavController(unselectedImage: "like_unselected", selectedImage: "like_selected")
+        let likeNavSelected = templateNavController(unselectedImage: "send2", selectedImage: "send2_selected")
         
         viewControllers = [homeNavController,searchNavController,plusNavController,likeNavSelected,profileNavController]
         

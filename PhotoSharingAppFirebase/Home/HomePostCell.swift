@@ -11,6 +11,7 @@ import UIKit
 protocol HomePostCellDelegate {
     func didTapCommentButton(post: Post)
     func didLike(for cell: HomePostCell)
+    func sendMessageButtonPressed(to toUser: String)
 }
 
 class HomePostCell: UICollectionViewCell {
@@ -69,9 +70,10 @@ class HomePostCell: UICollectionViewCell {
         return button
     }()
     
-    let sendMessageButton: UIButton = {
+    lazy var sendMessageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handleSendbuttonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -157,9 +159,7 @@ extension HomePostCell {
     }
     
     @objc func handleCommentButton(){
-        guard let post = post else {
-            return
-        }
+        guard let post = post else { return }
         delegate?.didTapCommentButton(post: post)
     }
     
@@ -167,6 +167,10 @@ extension HomePostCell {
         delegate?.didLike(for: self)
     }
     
+    @objc func handleSendbuttonPressed() {
+        guard let post = post else { return }
+        delegate?.sendMessageButtonPressed(to: post.user.uid)
+    }
 }
 
 
