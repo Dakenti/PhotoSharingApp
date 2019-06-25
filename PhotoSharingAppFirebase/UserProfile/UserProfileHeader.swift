@@ -29,7 +29,7 @@ class UserProfileHeader: UICollectionReusableView {
     private var followersNumber = 0
     private var followingsNumber: Int? {
         willSet {
-            followingLabel.text = "\(newValue)"
+            followingLabel.attributedText = createNSMutableAttributedString(title: "Follwings", number: newValue!)
         }
     }
         
@@ -293,6 +293,21 @@ extension UserProfileHeader {
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
             self.followingsNumber = Int(snapshot.childrenCount)
         })
+    }
+    
+    private func countNumberOfPosts() {
+        guard let currentLoggedUserId = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference().child("following").child(currentLoggedUserId)
+        ref.observe(.value, with: { (snapshot: DataSnapshot!) in
+            self.followingsNumber = Int(snapshot.childrenCount)
+        })
+    }
+    
+    private func createNSMutableAttributedString(title: String, number: Int) -> NSAttributedString{
+        let attributedText = NSMutableAttributedString(string: "\(title)\n", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: "\(number)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
+        
+        return attributedText
     }
 }
 
