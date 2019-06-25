@@ -25,6 +25,13 @@ class UserProfileHeader: UICollectionReusableView {
             setupEditFollowButton()
         }
     }
+    
+    private var followersNumber = 0
+    private var followingsNumber: Int? {
+        willSet {
+            followingLabel.text = "\(newValue)"
+        }
+    }
         
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -77,12 +84,12 @@ class UserProfileHeader: UICollectionReusableView {
         return label
     }()
     
-    let followersLabel: UILabel = {
+    lazy var followersLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         
         let attributedText = NSMutableAttributedString(string: "Followers\n", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "0", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
+        attributedText.append(NSAttributedString(string: "\(self.followingsNumber ?? 0)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
         
         label.numberOfLines = 0
         label.attributedText = attributedText
@@ -119,6 +126,8 @@ class UserProfileHeader: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        coountFollowingsNumber()
         
         setupProfileImageViewPosition()
         
@@ -274,6 +283,17 @@ extension UserProfileHeader {
         delegate?.didChangeToListView()
     }
     
+    private func coountFollowersNumber() {
+        
+    }
+    
+    private func coountFollowingsNumber() {
+        guard let currentLoggedUserId = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference().child("following").child(currentLoggedUserId)
+        ref.observe(.value, with: { (snapshot: DataSnapshot!) in
+            self.followingsNumber = Int(snapshot.childrenCount)
+        })
+    }
 }
 
 
