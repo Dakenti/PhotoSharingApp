@@ -224,6 +224,8 @@ extension UserProfileController: UICollectionViewDelegateFlowLayout {
         header.user = user
         
         header.delegate = self
+        
+        header.userId = userId
 
         return header
     }

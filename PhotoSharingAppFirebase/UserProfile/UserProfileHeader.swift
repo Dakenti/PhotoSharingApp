@@ -26,11 +26,23 @@ class UserProfileHeader: UICollectionReusableView {
         }
     }
     
-    private var followersNumber = 0
+    public var userId: String? {
+        didSet {
+            self.coountFollowersNumber(userId: userId!)
+            self.countNumberOfPosts(userId: userId!)
+            self.coountFollowingsNumber(userId: userId!)
+        }
+    }
+    
+    private var followersNumber: Int? {
+        willSet {
+            followersLabel.attributedText = createNSMutableAttributedString(title: "Follower", number: newValue!)
+        }
+    }
     
     private var followingsNumber: Int? {
         willSet {
-            followingLabel.attributedText = createNSMutableAttributedString(title: "Follwing", number: newValue!)
+            followingLabel.attributedText = createNSMutableAttributedString(title: "Following", number: newValue!)
         }
     }
     
@@ -118,13 +130,9 @@ class UserProfileHeader: UICollectionReusableView {
         
         return button
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        countNumberOfPosts()
-        
-        coountFollowingsNumber()
         
         setupProfileImageViewPosition()
         
@@ -232,9 +240,12 @@ extension UserProfileHeader {
     
     fileprivate func foundSearchUserFollowUnfollowButtonPress(currentLoggedUserId: String, userId: String) {
         let ref = Database.database().reference().child("following").child(currentLoggedUserId)
+        let followersRef = Database.database().reference().child("followers").child(userId)
         
         if editProfileFollowButton.titleLabel?.text == "Follow" {
             let values = [userId:1]
+            let followers = [currentLoggedUserId:1]
+            followersRef.updateChildValues(followers)
             ref.updateChildValues(values as [String:Int]) { (err, ref) in
                 if err != nil {
                     print("err, in follwing a user", err ?? "")
@@ -244,6 +255,7 @@ extension UserProfileHeader {
                 self.setupUnfollowStyle()
             }
         } else {
+            followersRef.child(userId).removeValue()
             ref.child(userId).removeValue { (err, ref) in
                 if err != nil {
                     print("err, cannot unfollow",err ?? "")
@@ -280,26 +292,25 @@ extension UserProfileHeader {
         delegate?.didChangeToListView()
     }
     
-    private func coountFollowersNumber() {
-        
+    private func coountFollowersNumber(userId: String) {
+        let ref = Database.database().reference().child("followers").child(userId)
+        ref.observe(.value, with: { (snapshot: DataSnapshot!) in
+            self.followersNumber = Int(snapshot.childrenCount)
+        })
     }
     
-    private func coountFollowingsNumber() {
-        guard let currentLoggedUserId = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("following").child(currentLoggedUserId)
+    private func coountFollowingsNumber(userId: String) {
+        let ref = Database.database().reference().child("following").child(userId)
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
             self.followingsNumber = Int(snapshot.childrenCount)
         })
-        print("coountFollowingsNumber")
     }
     
-    private func countNumberOfPosts() {
-        guard let currentLoggedUserId = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("posts").child(currentLoggedUserId)
+    private func countNumberOfPosts(userId: String) {
+        let ref = Database.database().reference().child("posts").child(userId)
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
             self.postsNumber = Int(snapshot.childrenCount)
         })
-        print("countNumberOfPosts")
     }
     
     private func createNSMutableAttributedString(title: String, number: Int) -> NSAttributedString {

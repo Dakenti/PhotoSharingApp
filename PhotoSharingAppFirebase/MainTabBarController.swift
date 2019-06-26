@@ -45,7 +45,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func setupViewControllers() {
         //user
+        guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
         let profileViewController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        profileViewController.userId = currentLoggedInUserId
         let profileNavController = templateNavController(unselectedImage: "profile_unselected", selectedImage: "profile_selected", rootViewController: profileViewController)
         //home
         let homeViewController = HomeController(collectionViewLayout: UICollectionViewFlowLayout())
