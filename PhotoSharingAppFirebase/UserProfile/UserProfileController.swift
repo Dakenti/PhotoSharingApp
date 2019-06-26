@@ -65,7 +65,9 @@ extension UserProfileController {
     }
     
     fileprivate func setupLogOutButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogOut))
+        if let currentLoggedInUser = Auth.auth().currentUser?.uid, currentLoggedInUser == userId {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogOut))
+        }
     }
     
     @objc func handleLogOut() {
