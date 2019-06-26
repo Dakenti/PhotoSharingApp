@@ -27,9 +27,16 @@ class UserProfileHeader: UICollectionReusableView {
     }
     
     private var followersNumber = 0
+    
     private var followingsNumber: Int? {
         willSet {
-            followingLabel.attributedText = createNSMutableAttributedString(title: "Follwings", number: newValue!)
+            followingLabel.attributedText = createNSMutableAttributedString(title: "Follwing", number: newValue!)
+        }
+    }
+    
+    private var postsNumber: Int? {
+        willSet {
+            postLabel.attributedText = createNSMutableAttributedString(title: "Post", number: newValue!)
         }
     }
         
@@ -74,13 +81,7 @@ class UserProfileHeader: UICollectionReusableView {
     let postLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "Post\n", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "11", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        
         label.numberOfLines = 0
-        label.attributedText = attributedText
-        
         return label
     }()
     
@@ -100,13 +101,7 @@ class UserProfileHeader: UICollectionReusableView {
     let followingLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "Following\n", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "0", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        
         label.numberOfLines = 0
-        label.attributedText = attributedText
-        
         return label
     }()
     
@@ -126,6 +121,8 @@ class UserProfileHeader: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        countNumberOfPosts()
         
         coountFollowingsNumber()
         
@@ -293,20 +290,22 @@ extension UserProfileHeader {
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
             self.followingsNumber = Int(snapshot.childrenCount)
         })
+        print("coountFollowingsNumber")
     }
     
     private func countNumberOfPosts() {
         guard let currentLoggedUserId = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("following").child(currentLoggedUserId)
+        let ref = Database.database().reference().child("posts").child(currentLoggedUserId)
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
-            self.followingsNumber = Int(snapshot.childrenCount)
+            self.postsNumber = Int(snapshot.childrenCount)
         })
+        print("countNumberOfPosts")
     }
     
-    private func createNSMutableAttributedString(title: String, number: Int) -> NSAttributedString{
+    private func createNSMutableAttributedString(title: String, number: Int) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: "\(title)\n", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: "\(number)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        
+        print("counted: ",number)
         return attributedText
     }
 }

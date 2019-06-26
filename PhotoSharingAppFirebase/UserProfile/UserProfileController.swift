@@ -22,6 +22,12 @@ class UserProfileController: UICollectionViewController {
     var isFinishedPaginating = false
     var isGridView = true
     
+    let refreshControl: UIRefreshControl = {
+        let rf = UIRefreshControl()
+        rf.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        return rf
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,11 +37,14 @@ class UserProfileController: UICollectionViewController {
         collectionView.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.register(HomePostCell.self, forCellWithReuseIdentifier: homePostCellId)
         
+        collectionView.refreshControl = refreshControl
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: NSNotification.Name(rawValue: "UpdateFeed"), object: nil)
+        
         setupLogOutButton()
         
         fetchUser()
     }
-    
 }
 
 // MARK: Fetching User info
@@ -84,7 +93,7 @@ extension UserProfileController {
         
         let dbRef = Database.database().reference().child("posts").child(uid)
         dbRef.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
-            
+            self.collectionView?.refreshControl?.endRefreshing()
             guard let dictionary = snapshot.value as? [String:Any] else { return }
             let post = Post(user: self.user!, dictionary: dictionary)
             self.posts.append(post)
@@ -140,6 +149,16 @@ extension UserProfileController {
         }
     }
     
+    @objc func handleUpdateFeed() {
+        handleRefresh()
+    }
+    
+    @objc fileprivate func handleRefresh() {
+        print("Handling refresh..")
+        posts.removeAll()
+        collectionView.reloadData()
+        fetchPosts()
+    }
 }
 
 // MARK: Setting up Collection view properties
